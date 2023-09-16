@@ -40,8 +40,7 @@ class AdoptionPredictor:
         # Encode Label column from string to integers
         label_encoder = LabelEncoder()
         label_encoder = label_encoder.fit(self.labels)
-        self.labels = label_encoder.transform(self.labels)
-
+        self.labels = label_encoder.transform(self.labels)    
 
     def split_data(self):
         """Split data into Train, Test & Val set (60-20-20)"""
@@ -63,8 +62,12 @@ class AdoptionPredictor:
     def check_for_null_columns(self):
         """Print out the number of empty columns in the input data"""
         null_data = self.data.isna().sum()
+
+        num_null_columns = len(null_data) - self.data.shape[1]
+        if num_null_columns == 0:
+            num_null_columns = 'no'
         
-        print(f"There are {len(null_data) - self.data.shape[1]} null columns")
+        print(f"There are {num_null_columns} null columns")
     
     def train_model(self,use_gpu=False,time_training=False):
         """Train Model Using XGBoost Classifier"""
@@ -111,10 +114,44 @@ class AdoptionPredictor:
         print('F1 Score: {:.2f}%'.format(f1_score(self.y_test, y_pred, average='binary') * 100)) 
         
 
-    def write_model_to_disk(self,input_path:str):
+    def run_prediction(self):
+        """ predict data on trained model """
+        
+        best_tree = self.model.best_iteration
+        
+        y_pred = self.model.predict(self.features, iteration_range=(0,best_tree))
+
+        y_pred_df = df = pd.DataFrame({'Adopted_prediction': y_pred})
+
+
+        self.data['Adopted_prediction'] = y_pred_df['Adopted_prediction'].replace({1: 'Yes', 0: 'No'})
+
+        print(self.data.head(4))
+    
+        # self.predictor = pd.DataFrame(y_pred, columns=["Adopted_prediction"])
+
+        
+        # self.new_data['Adopted_prediction'] = self.predictor['Adopted_prediction'].apply(lambda x: 'No' if x == 0 else 'Yes')        
+        
+        # if not os.path.exists("output"):
+        #     os.makedirs("output") 
+
+        # self.new_data.to_csv("output/results.csv")
+
+        # return save_data, self.new_features, self.new_data, label_encoder
+
+    def write_model_to_disk(self,output_path:str):
         """Save Trained Model to Disk"""
-        directory, filename = os.path.split(input_path)
+        directory, filename = os.path.split(output_path)
         
         if not os.path.exists(directory):
             os.makedirs(directory) 
-        self.model.save_model(input_path)
+        self.model.save_model(output_path)
+
+    def read_model_from_disk(self,input_path:str):
+        '''Load trained model from disk'''
+        self.model = XGBClassifier()
+        self.model.load_model(input_path)
+    
+    def get_training_data(self):
+        return self.data
