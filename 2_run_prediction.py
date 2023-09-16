@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 if __name__ == '__main__':
    
    file_name = "gs://cloud-samples-data/ai-platform-unified/datasets/tabular/petfinder-tabular-classification.csv"
-
+   logger.info("Downloading required files...")
    #Load the data from gcloud and save it locally
    if not os.path.exists('artifacts/input_file.csv'):
       
@@ -36,17 +36,24 @@ if __name__ == '__main__':
 
    df = pd.read_csv(io.StringIO(content))
 
+   logger.info("Downloading done. Loading data.")
+
    adoption_predictor = AdoptionPredictor()
    adoption_predictor.load_data(df)
-
+   logger.info("Data loaded, loading model")
 
    adoption_predictor.read_model_from_disk('artifacts/model.json')
+   logger.info("Model loaded, running prediction")
 
    adoption_predictor.run_prediction()
+   logger.info("Prediction ran successfully")
 
    result_df = adoption_predictor.get_training_data()
    
    os.makedirs('output',exist_ok=True)
-   result_df.to_csv('output/results.csv')
+   output_file_path = 'output/results.csv'
+   result_df.to_csv(output_file_path)
+
+   logger.info(f"Output results into {output_file_path}")
 
    

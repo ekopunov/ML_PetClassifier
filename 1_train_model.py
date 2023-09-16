@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 if __name__ == '__main__':
 
    logger.info('Starting model trainer')
+   logger.info("Importing training dataset")
    
    #Load the data from gcloud and save it locally
    if not os.path.exists('artifacts/input_file.csv'):
@@ -36,12 +37,15 @@ if __name__ == '__main__':
 
    df = pd.read_csv(io.StringIO(content))
 
+   logger.info("Training model")
    adoption_predictor = AdoptionPredictor()
    adoption_predictor.load_data(df)
    adoption_predictor.check_for_null_columns()
    adoption_predictor.split_data()
    adoption_predictor.train_model(time_training=True)
+   logger.info("Evaluating model")
    adoption_predictor.evaluate_model()
+   logger.info("Writing model to disk")
    adoption_predictor.write_model_to_disk('artifacts/model.json')
    
 
