@@ -13,6 +13,7 @@ setup(
     version='0.1',
     packages=find_packages(),
     install_requires=[
-        # Dependencies
+        "scikit_learn==1.3.0",
+        "xgboost==2.0.0"
     ],
 )
