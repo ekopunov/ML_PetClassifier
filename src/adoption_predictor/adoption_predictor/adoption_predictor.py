@@ -123,22 +123,7 @@ class AdoptionPredictor:
 
         y_pred_df = df = pd.DataFrame({'Adopted_prediction': y_pred})
 
-
         self.data['Adopted_prediction'] = y_pred_df['Adopted_prediction'].replace({1: 'Yes', 0: 'No'})
-
-        print(self.data.head(4))
-    
-        # self.predictor = pd.DataFrame(y_pred, columns=["Adopted_prediction"])
-
-        
-        # self.new_data['Adopted_prediction'] = self.predictor['Adopted_prediction'].apply(lambda x: 'No' if x == 0 else 'Yes')        
-        
-        # if not os.path.exists("output"):
-        #     os.makedirs("output") 
-
-        # self.new_data.to_csv("output/results.csv")
-
-        # return save_data, self.new_features, self.new_data, label_encoder
 
     def write_model_to_disk(self,output_path:str):
         """Save Trained Model to Disk"""
