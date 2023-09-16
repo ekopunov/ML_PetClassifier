@@ -1,4 +1,6 @@
 *.egg-info/
 **/__pycache__/
 *.vscode/
+*.keys
+output/
 artifacts/input_file.csv
