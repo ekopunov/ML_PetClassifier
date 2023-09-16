@@ -36,17 +36,12 @@ if __name__ == '__main__':
 
    df = pd.read_csv(io.StringIO(content))
 
-   adoption_predictor = AdoptionPredictor(df)
-
+   adoption_predictor = AdoptionPredictor()
+   adoption_predictor.load_data(df)
    adoption_predictor.check_for_null_columns()
-
    adoption_predictor.split_data()
-
-
    adoption_predictor.train_model(time_training=True)
-
    adoption_predictor.evaluate_model()
-
    adoption_predictor.write_model_to_disk('artifacts/model.json')
    
 

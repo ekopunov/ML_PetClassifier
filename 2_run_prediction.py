@@ -36,7 +36,9 @@ if __name__ == '__main__':
 
    df = pd.read_csv(io.StringIO(content))
 
-   adoption_predictor = AdoptionPredictor(df)
+   adoption_predictor = AdoptionPredictor()
+   adoption_predictor.load_data(df)
+
 
    adoption_predictor.read_model_from_disk('artifacts/model.json')
 

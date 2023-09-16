@@ -23,13 +23,14 @@ logger = logging.getLogger(__name__)
 logger.level = logging.INFO
 
 class AdoptionPredictor:
-    def __init__(self,input_data):
+    def __init__(self):
         self.features = None
         self.labels = None
         self.predictor = None
-        self.data = input_data
-
+        
+    def load_data(self,input_data):
         """Import training data into the class"""
+        self.data = input_data
         # Split Data into Training Features and Label
         self.features = self.data.iloc[:, :-1]
         self.labels = self.data.iloc[:, -1]
