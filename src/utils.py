@@ -1,5 +1,9 @@
 import os
 import time
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 def write_to_disk(input_path:str,input_content):
     directory, filename = os.path.split(input_path)
@@ -20,6 +24,6 @@ def execution_timer(func):
         result = func(*args, **kwargs)
         end_time = time.perf_counter()
         execution_time = end_time - start_time
-        print(f"{func.__name__} took {execution_time:.6f} seconds to execute.")
+        logger.info(f"{func.__name__} took {execution_time:.6f} seconds to execute.")
         return result
     return wrapper

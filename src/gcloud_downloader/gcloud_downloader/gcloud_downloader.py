@@ -28,5 +28,3 @@ if __name__ == "__main__":
     gcloud_downloader = GCloudDownloader(client_project="testingtheapi-357421")
     
     content = gcloud_downloader.get_blob("gs://cloud-samples-data/ai-platform-unified/datasets/tabular/petfinder-tabular-classification.csv")
-
-    print(content[0:1])

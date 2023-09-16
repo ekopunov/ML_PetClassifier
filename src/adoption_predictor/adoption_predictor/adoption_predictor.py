@@ -50,14 +50,12 @@ class AdoptionPredictor:
         self.X_valid, self.X_test, self.y_valid, self.y_test = \
                 train_test_split(self.X_rem, self.y_rem, test_size=0.5)
 
-        print(f'Shape of Train Data: {self.X_train.shape}')  
-        print(f'Shape of Train Label: {self.y_train.shape}\n\n')
-
-        print(f'Shape of Test Data: {self.X_test.shape}')  
-        print(f'Shape of Test Label: {self.y_test.shape}\n\n')  
-
-        print(f'Shape of Train Data: {self.X_valid.shape}')  
-        print(f'Shape of Train Data: {self.y_valid.shape}')  
+        logger.info(f"Shape of Train Data: {self.X_train.shape}")
+        logger.info(f"Shape of Train Label: {self.y_train.shape}\n")
+        logger.info(f"Shape of Test Data: {self.X_test.shape}")
+        logger.info(f"Shape of Test Label: {self.y_test.shape}\n")
+        logger.info(f"Shape of Train Data: {self.X_valid.shape}")
+        logger.info(f"Shape of Train Data: {self.y_valid.shape}")
            
     def check_for_null_columns(self):
         """Print out the number of empty columns in the input data"""
@@ -67,7 +65,7 @@ class AdoptionPredictor:
         if num_null_columns == 0:
             num_null_columns = 'no'
         
-        print(f"There are {num_null_columns} null columns")
+        logger.info(f"There are {num_null_columns} null columns")
     
     def train_model(self,use_gpu=False,time_training=False):
         """Train Model Using XGBoost Classifier"""
@@ -83,8 +81,7 @@ class AdoptionPredictor:
                                    enable_categorical=True,
                                    use_label_encoder=False,
                                    early_stopping_rounds=10)
-        if time_training:
-            start_time = time.perf_counter()
+        start_time = time.perf_counter()
         
         self.model.fit(self.X_train, self.y_train,eval_set=eval_set, verbose=False)
 
@@ -104,14 +101,11 @@ class AdoptionPredictor:
         y_pred = self.model.predict(self.X_test, iteration_range=(0, best_tree))
         
         # Model Evaluation Metrics on Test Set
-        print("|-----------------------------------------|")
-        print('Accuracy Score: {:.2f}%'.format(accuracy_score(self.y_test, y_pred) * 100))  
-        print('')
-        print('Precision Score: {:.2f}%'.format(precision_score(self.y_test, y_pred, average='binary') * 100))  
-        print('')
-        print('Recall Score: {:.2f}%'.format(recall_score(self.y_test, y_pred, average='binary') * 100))
-        print('')
-        print('F1 Score: {:.2f}%'.format(f1_score(self.y_test, y_pred, average='binary') * 100)) 
+        
+        logger.info(f"Accuracy Score: {accuracy_score(self.y_test, y_pred) * 100:.2f}%")
+        logger.info(f"Precision Score: {precision_score(self.y_test, y_pred, average='binary') * 100:.2f}%")
+        logger.info(f"Recall Score: {recall_score(self.y_test, y_pred, average='binary') * 100:.2f}%")
+        logger.info(f"F1 Score: {f1_score(self.y_test, y_pred, average='binary') * 100:.2f}%")
         
 
     def run_prediction(self):
